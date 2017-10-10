@@ -19,7 +19,7 @@ shuffle(cards);
 
 for (var i = cards.length - 1; i >= 0; i--) {
     $(".deck").append(`<li class="card">
-                <i class="fa `+cards[i]+`"></i>
+                <i id= `+ i +`   class="fa `+cards[i]+`"></i>
             </li>`);
  };
 
@@ -55,39 +55,71 @@ function shuffle(array) {
 
 var move = 1;
 var openedCard = [];    //placeholder for card that have been opened
+let comparing = false;
+let timer = false;
+myTimer();
 
-$("li").on("click",function(){  //listen to card that being clicked
-        openedCard.push($(this));
-        $(this).addClass("show");   //the card will be opened and showed
-        $(this).addClass("open");
-        compareCard();
-        playerWin();
-})
+	$("li").on("click",function(){  //listen to card that being clicked
+		timer = true;
+	    if (comparing === false) {
+	    	openedCard.push($(this));
+		    $(this).addClass("show");   //the card will be opened and showed
+		    $(this).addClass("open");
+		    compareCard();  
+		}
+	});
+
+
 
 
 
 function incrementMove() {
     $(".moves").html(move);
     move++;
+    if (move === 16) {
+    	$(".stars li:nth-child(3)").addClass("hide");
+    } else if (move === 21) {
+    	$(".stars li:nth-child(2)").addClass("hide");
+    } else if (move === 26) {
+    	$(".stars li:nth-child(1)").addClass("hide");
+    }
 }
 
 function compareCard() {
+	
     if (openedCard.length === 2){   //comparing if the array filled with 2 cards   //after the card open, push the card to the array 
-        incrementMove();
-        if (openedCard[0].children().attr("class") === openedCard[1].children().attr("class")) {    //if cards are the same then add the class matched to the cards, after that empty the cards holder array
-            matchedCard();
-            openedCard =[];
-        } 
-        else {      //else the card will be closed again and empty the cards holder array 
-            doNotMatchedCard();
-            openedCard =[];
-        }
-    }  
+        if (openedCard[0].children().attr("id") !== openedCard[1].children().attr("id")) {
+        	comparing = true;
+	        incrementMove();
+	        setTimeout(function(){
+	        	if (openedCard[0].children().attr("class") === openedCard[1].children().attr("class")) {    //if cards are the same then add the class matched to the cards, after that empty the cards holder array
+	            	matchedCard();
+	            	openedCard =[];
+	            	comparing = false;
+	            	playerWin();
+
+	        	} 
+	        	else {      //else the card will be closed again and empty the cards holder array 
+	            	doNotMatchedCard();
+	            	openedCard =[];
+	            	comparing = false;
+	        	}
+	    	},1000);
+	    } else {
+	    	openedCard.splice(1,1);
+	    }	
+	   	
+    }
+
 }
 
 function matchedCard() {
     openedCard[0].addClass("matched");
     openedCard[1].addClass("matched");
+    openedCard[0].addClass("cardLocked");
+    openedCard[1].addClass("cardLocked");
+    openedCard[0].removeClass("card");
+    openedCard[1].removeClass("card");
 }
 
 function doNotMatchedCard() {
@@ -102,8 +134,32 @@ $(".restart").click(function() {
 
 function playerWin() {
     if ($(".deck").children().length == $(".deck").children(".matched").length) {
+    	timer = false;
         alert("wooo you win the game !!!");
-        location.reload();
     }
 
+}
+
+function myTimer () {
+	let s = 0 ; // time in second
+	let display = 0 + " min " + 0 +" sec";
+	let min = 0;
+	let sec = 0;
+	setInterval(function(){
+		if (timer === true) {
+			s++;
+			min = Math.floor(s/60) ;
+			sec = s % 60;
+			display = "Timer : " +  min + " min " + sec +" sec";
+			$(".timer").html(display);
+
+		} else {
+			display = "Timer : " + min + " min " + sec +" sec";
+			$(".timer").html(display);
+
+		}
+
+		
+
+	},1000);
 }

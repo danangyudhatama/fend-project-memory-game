@@ -65,6 +65,20 @@ h1 {
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
 }
 
+.deck .cardLocked {
+    height: 125px;
+    width: 125px;
+    background: #2e3d49;
+    font-size: 33px;
+     color: #ffffff;
+    background: #05ffdd;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
+}
+
 .deck .card.open {
     transform: rotateY(0);
     background: #02b3e4;
@@ -87,15 +101,21 @@ h1 {
 
 .score-panel {
     text-align: left;
-    width: 345px;
+    width: 60%;
+    max-width: 500px;
     margin-bottom: 10px;
 }
 
 .score-panel .stars {
+    float: left;
     margin: 0;
     padding: 0;
     display: inline-block;
     margin: 0 5px 0 0;
+}
+
+.score-panel .stars .hide {
+    opacity: 0.1;
 }
 
 .score-panel .stars li {
@@ -106,4 +126,12 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+.score-panel .timer {
+    display: inline-block;
+    margin: 0 auto;
+    padding: 0;
+    display: inline-block;
+    margin: 0 5px 0 0;
 }
