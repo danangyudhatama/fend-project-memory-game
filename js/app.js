@@ -53,21 +53,47 @@ function shuffle(array) {
  */
 
 
-var move = 1;
-var openedCard = [];    //placeholder for card that have been opened
+let move = 1;
+let openedCard = [];    //placeholder for card that have been opened
 let comparing = false;
 let timer = false;
+let timeSpent ;		// var holder for time spend to show in the modal
+let starsGotten ;   // var holder for stars to show in the modal
+
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
 myTimer();
 
-	$("li").on("click",function(){  //listen to card that being clicked
-		timer = true;
-	    if (comparing === false) {
-	    	openedCard.push($(this));
-		    $(this).addClass("show");   //the card will be opened and showed
-		    $(this).addClass("open");
-		    compareCard();  
-		}
-	});
+$("li").on("click",function(){  //listen to card that being clicked
+	timer = true;
+    if (comparing === false) {
+    	openedCard.push($(this));
+	    $(this).addClass("show");   //the card will be opened and showed
+	    $(this).addClass("open");
+	    compareCard();  
+	}
+});
+
+$(".restart").click(function() {
+    location.reload();
+}) 
+
 
 
 
@@ -80,8 +106,6 @@ function incrementMove() {
     	$(".stars li:nth-child(3)").addClass("hide");
     } else if (move === 21) {
     	$(".stars li:nth-child(2)").addClass("hide");
-    } else if (move === 26) {
-    	$(".stars li:nth-child(1)").addClass("hide");
     }
 }
 
@@ -128,14 +152,15 @@ function doNotMatchedCard() {
 }
 
 
-$(".restart").click(function() {
-    location.reload();
-}) 
-
 function playerWin() {
     if ($(".deck").children().length == $(".deck").children(".matched").length) {
-    	timer = false;
-        alert("wooo you win the game !!!");
+    	timer = false ; // stop the timer
+    	$(".message").html($(".inside-modal").html()); // copy the html of score board to the modal content
+    	modal.style.display = "block";	  //display the modal if player win  
+    	$(".restart").click(function() {
+    	location.reload();
+		}) 
+ 
     }
 
 }
@@ -151,12 +176,13 @@ function myTimer () {
 			min = Math.floor(s/60) ;
 			sec = s % 60;
 			display = "Timer : " +  min + " min " + sec +" sec";
+			timeSpent = display;
 			$(".timer").html(display);
 
 		} else {
 			display = "Timer : " + min + " min " + sec +" sec";
+			timeSpent = display;
 			$(".timer").html(display);
-
 		}
 
 		
